@@ -30,7 +30,7 @@ exports.register = async function(req, res){
                 }
             })
             db.query(sql2, (error, results) => {
-                
+                console.log('добавлен месячный кошелёк')
             })
         }
     })

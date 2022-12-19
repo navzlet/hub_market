@@ -19,3 +19,14 @@ exports.getMonthBalance = (req, res) => {
         response.status(200, rows[0], res)
 }})
 }
+
+exports.getUserNames = (req, res) => {
+        const sql = "SELECT `name`, `login` FROM user WHERE `login` LIKE  '%" + req.body.search + "%' or `name` LIKE  '%" + req.body.search + "%'"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                console.log(sql)
+                response.status(200, rows, res)
+        }})
+}
