@@ -12,7 +12,7 @@ if(error) {
 }
 
 exports.getMonthBalance = (req, res) => {
-        db.query("SELECT `user_id`, `balance` FROM month_wallet WHERE `user_id` = '" + req.user.user_id + "'", (error, rows, fields) => {
+        db.query("SELECT `login`, `balance` FROM month_wallet WHERE `login` = '" + req.user.login + "'", (error, rows, fields) => {
         if(error) {
         response.status(400, error, res)
 } else {

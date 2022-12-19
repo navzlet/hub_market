@@ -1,4 +1,3 @@
-//"SELECT `smth`, `smth` FROM `smth` WHERE `smth` = '" + req.body.smth + "'"
 ### auth
 /login (post)
 {
@@ -27,7 +26,7 @@
 
 ### month wallet
 /share (post)
-/month_balance/ (get)
+/getMonthBalance/ (get)
 
 
 ### rating

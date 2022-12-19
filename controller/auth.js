@@ -20,13 +20,17 @@ exports.register = async function(req, res){
             const salt = bcrypt.genSaltSync(10)
             const password = bcrypt.hashSync(req.body.password, salt) 
 
-            const sql = "INSERT INTO `user`(`login`, `name`, `password`) VALUES('" + login + "', '" + name + "', '" + password + "')";
+            const sql = "INSERT INTO `user`(`login`, `name`, `password`) VALUES('" + login + "', '" + name + "', '" + password + "');";
+            const sql2 = " INSERT INTO `month_wallet`(`login`, `balance`) VALUES('" + login + "', '30')"
             db.query(sql, (error, results) => {
                 if(error) {
                     response.status(400, error, res)
                 } else {
                     response.status(200, {message: `Регистрация прошла успешно.`, results}, res)
                 }
+            })
+            db.query(sql2, (error, results) => {
+                
             })
         }
     })
@@ -48,7 +52,7 @@ exports.login = (req, res) => {
                       userId: rw.user_id,
                       login: rw.login
                   }, keys.jwt, { expiresIn: 120 * 120 })
-                  response.status(200, {token: `Bearer ${token}`}, res)
+                  response.status(200, {token: `Bearer ${token}`, id: rw.login}, res)
               } else {
                   //Выкидываем ошибку что пароль не верный
                   response.status(401, {message: `Пароль не верный.`}, res)
