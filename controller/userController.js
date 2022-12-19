@@ -2,12 +2,12 @@ const response = require('./../response.js')
 
 const db = require('./../settings/db')
 
-exports.getAll = (req, res) => {
-    db.query('SELECT * FROM user', (error, rows, fields) => {
-if(error) {
+exports.getUser = (req, res) => {
+        db.query("SELECT * FROM user WHERE `login` = '" + req.user.login + "'", (error, rows, fields) => {
+        if(error) {
         response.status(400, error, res)
 } else {
-        response.status(200, rows, res)
+        response.status(200, rows[0], res)
 }})
 }
 
@@ -35,7 +35,6 @@ exports.getUserNames = (req, res) => {
                 if(error) {
                 response.status(400, error, res)
         } else {
-                console.log(sql)
                 response.status(200, rows, res)
         }})
 }
@@ -68,14 +67,75 @@ else{
                 if(error) {
                 response.status(400, error, res)
         } else {
-                console.log(sql)
                 response.status(200, rows, res)
         }})
         }
 })
 }
 })
+}
 
+exports.getTransaction = (req, res) => {
+        transaction_id = req.params.id
+        const sql = "SELECT `getter_id`, `sender_id`, `amount`, `comment`, `date`, `comment_is_hidden` FROM transaction WHERE `id` LIKE  '" + transaction_id + "'"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows[0], res)
+        }})
+}
 
+exports.getAllTransactions = (req, res) => {
+        const sql = "SELECT * FROM transaction"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
+}
 
+exports.getIncomingTransactions = (req, res) => {
+        const sql = "SELECT * FROM transaction WHERE getter_id = '"+ req.user.login + "'"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
+}
+
+exports.getOutcomingTransactions = (req, res) => {
+        const sql = "SELECT * FROM transaction WHERE sender_id = '"+ req.user.login + "'"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
+}
+
+exports.rating_senders_all = (req, res) => {
+        //1. посчитать количество монет для каждого login
+        //2. вернуть order by количество
+        const sql = "SELECT `sender_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction GROUP BY `sender_id` ORDER BY `total_amount` DESC"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
+}
+
+exports.rating_getters_all = (req, res) => {
+        //1. посчитать количество монет для каждого login
+        //2. вернуть order by количество
+        const sql = "SELECT `getter_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction GROUP BY `getter_id` ORDER BY `total_amount` DESC"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
 }

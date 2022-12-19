@@ -11,9 +11,9 @@ module.exports = (app) => {
         .route('/login')
         .post(auth.login)
 
-    app
-        .route('/getAll')
-        .get(passport.authenticate('jwt', { session: false }), userController.getAll)
+        app
+        .route('/getUser')
+        .get(passport.authenticate('jwt', { session: false }), userController.getUser)
 
         app
         .route('/getMonthBalance')
@@ -21,7 +21,7 @@ module.exports = (app) => {
 
         app
         .route('/getSharedBalance')
-        .get(passport.authenticate('jwt', { session: false }), userController.getSharedBalance)
+        .get(passport.authenticate('jwt', { session: false }), userController.getMonthBalance)
 
     app
         .route('/getUserNames')
@@ -30,4 +30,37 @@ module.exports = (app) => {
     app
         .route('/share')
         .post(passport.authenticate('jwt', { session: false }), userController.share)
-}
+
+        app
+        .route('/transaction/:id')
+        .get(passport.authenticate('jwt', { session: false }), userController.getTransaction)
+
+        app
+        .route('/getAllTransactions')
+        .get(passport.authenticate('jwt', { session: false }), userController.getAllTransactions)
+
+        app
+        .route('/getIncomingTransactions')
+        .get(passport.authenticate('jwt', { session: false }), userController.getIncomingTransactions)
+
+        app
+        .route('/getOutcomingTransactions')
+        .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
+
+        app
+        .route('/getOutcomingTransactions')
+        .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
+
+        app
+        .route('/getOutcomingTransactions')
+        .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
+
+        app
+        .route('/rating_senders/all_time')
+        .get(passport.authenticate('jwt', { session: false }), userController.rating_senders_all)
+
+        app
+        .route('/rating_getters/all_time')
+        .get(passport.authenticate('jwt', { session: false }), userController.rating_getters_all)
+    
+    }

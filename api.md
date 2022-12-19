@@ -22,6 +22,7 @@
 можно искать по логину или по имени
 -->
 
+/getUser (get)
 
 ### shared wallet
 /shared_balance/ (get)
@@ -39,18 +40,19 @@
 /getMonthBalance (get)
 
 
-### rating
-/raring_senders/mouth (get)
-/raring_senders/all_time (get)
-/raring_getters/mouth (get)
-/raring_getters/all_time (get)
-
-
 ### transactions history
 /transaction/:id (get)
 /transactions/all (get)
 /transactions/incoming (get)
 /transactions/outcoming (get)
+
+------------------------------
+
+### rating
+/rating_senders/month (get)
+/rating_senders/all_time (get)
+/rating_getters/month (get)
+/rating_getters/all_time (get)
 
 
 
