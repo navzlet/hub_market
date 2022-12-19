@@ -139,3 +139,27 @@ exports.rating_getters_all = (req, res) => {
                 response.status(200, rows, res)
         }})
 }
+
+
+exports.rating_getters_month = (req, res) => {
+        const date = new Date()
+        const sql = "SELECT `getter_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY `getter_id` ORDER BY `total_amount` DESC"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                response.status(200, rows, res)
+        }})
+}
+
+exports.rating_senders_month = (req, res) => {
+        const date = new Date()
+        const sql = "SELECT `sender_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY `sender_id` ORDER BY `total_amount` DESC"
+        db.query(sql, (error, rows, fields) => {
+                if(error) {
+                response.status(400, error, res)
+        } else {
+                console.log(sql)
+                response.status(200, rows, res)
+        }})
+}

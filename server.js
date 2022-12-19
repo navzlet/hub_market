@@ -19,6 +19,8 @@ setInterval(()=>{
 const routes = require('./settings/routes')
 routes(app)
 
+
+
 app.listen(port, () => {
     console.log('App Listening')
 }
