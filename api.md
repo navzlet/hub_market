@@ -1,3 +1,4 @@
+//"SELECT `smth`, `smth` FROM `smth` WHERE `smth` = '" + req.body.smth + "'"
 ### auth
 /login (post)
 {
@@ -13,20 +14,20 @@
 }
 
 ### user 
-/user/:name || /user/:id
+/user/:name || /user/:login
 <!---
 для поиска пользователей (во вкладке передать)
-можно искать по айди или по имени
+можно искать по логину или по имени
 -->
 
 
 ### shared wallet
-/shared_balance/:id (get)
+/shared_balance/ (get)
 
 
 ### month wallet
 /share (post)
-/month_balance/:id (get)
+/month_balance/ (get)
 
 
 ### rating
@@ -36,7 +37,7 @@
 /raring_getters/all_time (get)
 
 
-### transaction
+### transactions history
 /transaction/:id (get)
 /transactions/all (get)
 /transactions/incoming (get)

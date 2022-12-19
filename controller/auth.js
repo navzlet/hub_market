@@ -45,8 +45,8 @@ exports.login = (req, res) => {
               if(password) {
                   //Если true мы пускаем юзера и генерируем токен
                   const token = jwt.sign({ 
-                      userId: rw.id,
-                      email: rw.email
+                      userId: rw.user_id,
+                      login: rw.login
                   }, keys.jwt, { expiresIn: 120 * 120 })
                   response.status(200, {token: `Bearer ${token}`}, res)
               } else {

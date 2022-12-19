@@ -14,4 +14,8 @@ module.exports = (app) => {
     app
         .route('/getAll')
         .get(passport.authenticate('jwt', { session: false }), userController.getAll)
+
+    app
+        .route('/getMonthBalance')
+        .get(passport.authenticate('jwt', { session: false }), userController.getMonthBalance)
 }

@@ -17,7 +17,8 @@ module.exports = passport => {
             if(error) {
                 console.log(error)
             } else {
-                const user = rows
+                const user = rows[0]
+                console.log(user)
                 if(user) {
                     done(null, user)
                 } else {
