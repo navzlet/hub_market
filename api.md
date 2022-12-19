@@ -29,7 +29,14 @@
 
 ### month wallet
 /share (post)
-/getMonthBalance/ (get)
+{
+	"getter_id": "str",
+	"amount": "int",
+	"comment": "str",
+	"date": "YYYY-MM-DD",
+	"comment_is_hidden": "1/0"
+}
+/getMonthBalance (get)
 
 
 ### rating

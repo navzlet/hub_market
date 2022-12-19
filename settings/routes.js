@@ -15,11 +15,19 @@ module.exports = (app) => {
         .route('/getAll')
         .get(passport.authenticate('jwt', { session: false }), userController.getAll)
 
-    app
+        app
         .route('/getMonthBalance')
         .get(passport.authenticate('jwt', { session: false }), userController.getMonthBalance)
+
+        app
+        .route('/getSharedBalance')
+        .get(passport.authenticate('jwt', { session: false }), userController.getSharedBalance)
 
     app
         .route('/getUserNames')
         .get(passport.authenticate('jwt', { session: false }), userController.getUserNames)
+
+    app
+        .route('/share')
+        .post(passport.authenticate('jwt', { session: false }), userController.share)
 }

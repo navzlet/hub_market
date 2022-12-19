@@ -22,6 +22,7 @@ exports.register = async function(req, res){
 
             const sql = "INSERT INTO `user`(`login`, `name`, `password`) VALUES('" + login + "', '" + name + "', '" + password + "');";
             const sql2 = " INSERT INTO `month_wallet`(`login`, `balance`) VALUES('" + login + "', '30')"
+            const sql3 = " INSERT INTO `shared_wallet`(`login`, `balance`) VALUES('" + login + "', '0')"
             db.query(sql, (error, results) => {
                 if(error) {
                     response.status(400, error, res)
@@ -31,6 +32,9 @@ exports.register = async function(req, res){
             })
             db.query(sql2, (error, results) => {
                 console.log('добавлен месячный кошелёк')
+            })
+            db.query(sql3, (error, results) => {
+                
             })
         }
     })
