@@ -1,13 +1,13 @@
 const response = require('./../response.js')
-
 const db = require('./../settings/db')
 
 exports.getUser = (req, res) => {
         db.query("SELECT * FROM user WHERE `login` = '" + req.user.login + "'", (error, rows, fields) => {
         if(error) {
         response.status(400, error, res)
-} else {
+                } else {
         response.status(200, rows[0], res)
+        console.log(res)
 }})
 }
 
@@ -30,7 +30,7 @@ exports.getSharedBalance = (req, res) => {
 }
 
 exports.getUserNames = (req, res) => {
-        const sql = "SELECT `name`, `login` FROM user WHERE `login` LIKE  '%" + req.body.search + "%' or `name` LIKE  '%" + req.body.search + "%'"
+        const sql = "SELECT `name`, `login` FROM user WHERE (`login` LIKE  '%" + req.body.search + "%' and `login` NOT LIKE '" + req.user.login +"') or `name` LIKE  '%" + req.body.search + "%'"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -48,31 +48,39 @@ exports.share = (req, res) => {
         const date = req.body.date
         const comment_is_hidden = req.body.comment_is_hidden
 
+        if(sender_id !== getter_id){
 
+                
+                
         const remove_sender_sql = "UPDATE month_wallet SET balance = balance - '" + amount + "' WHERE login = '" + req.user.login + "'"
         db.query(remove_sender_sql, (error, rows, fields) => {
                 if(error) {
-                response.status(400, error, res)
-        }
-else{
-        
-        const add_getter_sql = "UPDATE shared_wallet SET balance = balance + '" + amount + "' WHERE login = '" + req.body.getter_id + "'"
-        db.query(add_getter_sql, (error, rows, fields) => {
-                if(error) {
                         response.status(400, error, res)
-        }
-        else{
-                const sql = "INSERT INTO `transaction` (`getter_id`, `sender_id`, `amount`, `comment`, `date`, `comment_is_hidden`) VALUES ('" + getter_id + "', '" + sender_id + "', '" + amount + "', '" + comment + "', '" + date + "', '" + comment_is_hidden + "'); "
+                }
+                else{
+                        
+                        const add_getter_sql = "UPDATE shared_wallet SET balance = balance + '" + amount + "' WHERE login = '" + getter_id + "' AND login != '" + sender_id + "' "
+                        db.query(add_getter_sql, (error, rows, fields) => {
+                                if(error) {
+                                        console.log("Can't send money youself")
+                                        response.status(400, error, res)
+                                }
+                                else{
+                                        const sql = "INSERT INTO `transaction` (`getter_id`, `sender_id`, `amount`, `comment`, `date`, `comment_is_hidden`) VALUES ('" + getter_id + "', '" + sender_id + "', '" + amount + "', '" + comment + "', '" + date + "', '" + comment_is_hidden + "'); "
         db.query(sql, (error, rows, fields) => {
                 if(error) {
-                response.status(400, error, res)
-        } else {
-                response.status(200, rows, res)
-        }})
+                        response.status(400, error, res)
+                } else {
+                        response.status(200, rows, res)
+                }})
         }
 })
 }
 })
+}
+else{
+        res.status(400).json({message: "Can't send money to youself!!!"})
+}
 }
 
 exports.getTransaction = (req, res) => {
