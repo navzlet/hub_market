@@ -13,7 +13,7 @@
 }
 
 ### user 
-/getUserNames	
+/getUserNames	(get)
 {
 	"search": "str"
 }
@@ -25,7 +25,7 @@
 /getUser (get)
 
 ### shared wallet
-/shared_balance/ (get)
+/getSharedBalance (get)
 
 
 ### month wallet

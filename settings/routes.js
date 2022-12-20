@@ -36,23 +36,15 @@ module.exports = (app) => {
         .get(passport.authenticate('jwt', { session: false }), userController.getTransaction)
 
         app
-        .route('/getAllTransactions')
+        .route('/transactions/all')
         .get(passport.authenticate('jwt', { session: false }), userController.getAllTransactions)
 
         app
-        .route('/getIncomingTransactions')
+        .route('/transactions/incoming')
         .get(passport.authenticate('jwt', { session: false }), userController.getIncomingTransactions)
 
         app
-        .route('/getOutcomingTransactions')
-        .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
-
-        app
-        .route('/getOutcomingTransactions')
-        .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
-
-        app
-        .route('/getOutcomingTransactions')
+        .route('/transactions/outcoming')
         .get(passport.authenticate('jwt', { session: false }), userController.getOutcomingTransactions)
 
         app

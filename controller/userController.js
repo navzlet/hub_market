@@ -49,20 +49,15 @@ exports.share = (req, res) => {
         const comment_is_hidden = req.body.comment_is_hidden
 
         if(sender_id !== getter_id){
-
-                
-                
         const remove_sender_sql = "UPDATE month_wallet SET balance = balance - '" + amount + "' WHERE login = '" + req.user.login + "'"
         db.query(remove_sender_sql, (error, rows, fields) => {
                 if(error) {
                         response.status(400, error, res)
                 }
-                else{
-                        
-                        const add_getter_sql = "UPDATE shared_wallet SET balance = balance + '" + amount + "' WHERE login = '" + getter_id + "' AND login != '" + sender_id + "' "
+        else{
+                        const add_getter_sql = "UPDATE shared_wallet SET balance = balance + '" + amount + "' WHERE login = '" + req.body.getter_id + "'"
                         db.query(add_getter_sql, (error, rows, fields) => {
                                 if(error) {
-                                        console.log("Can't send money youself")
                                         response.status(400, error, res)
                                 }
                                 else{
@@ -75,11 +70,11 @@ exports.share = (req, res) => {
                 }})
         }
 })
-}
+        }
 })
 }
 else{
-        res.status(400).json({message: "Can't send money to youself!!!"})
+        res.status(400).json({error: "Can't send money to youself!!!"})
 }
 }
 
