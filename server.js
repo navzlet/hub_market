@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const port = process.env.PORT || 3306
+const port = 3306
+//process.env.PORT ||
 const db = require('./settings/db')
 
 app.use(require('morgan')('dev'))

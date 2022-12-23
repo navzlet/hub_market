@@ -21,11 +21,11 @@ module.exports = (app) => {
 
         app
         .route('/getSharedBalance')
-        .get(passport.authenticate('jwt', { session: false }), userController.getMonthBalance)
+        .get(passport.authenticate('jwt', { session: false }), userController.getSharedBalance)
 
     app
         .route('/getUserNames')
-        .get(passport.authenticate('jwt', { session: false }), userController.getUserNames)
+        .post(passport.authenticate('jwt', { session: false }), userController.getUserNames)
 
     app
         .route('/share')

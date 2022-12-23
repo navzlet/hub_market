@@ -7,7 +7,6 @@ exports.getUser = (req, res) => {
         response.status(400, error, res)
                 } else {
         response.status(200, rows[0], res)
-        console.log(res)
 }})
 }
 
@@ -21,16 +20,18 @@ exports.getMonthBalance = (req, res) => {
 }
 
 exports.getSharedBalance = (req, res) => {
+        const sql = "SELECT `login`, `balance` FROM shared_wallet WHERE `login` = '" + req.user.login + "'"
         db.query("SELECT `login`, `balance` FROM shared_wallet WHERE `login` = '" + req.user.login + "'", (error, rows, fields) => {
         if(error) {
         response.status(400, error, res)
 } else {
+        console.log(sql)
         response.status(200, rows[0], res)
-}})
+}})     
 }
 
 exports.getUserNames = (req, res) => {
-        const sql = "SELECT `name`, `login` FROM user WHERE (`login` LIKE  '%" + req.body.search + "%' and `login` NOT LIKE '" + req.user.login +"') or `name` LIKE  '%" + req.body.search + "%'"
+        const sql = "SELECT `name`, `login` FROM user WHERE (`login` LIKE  '%" + req.body.search + "%' and `login` NOT LIKE '" + req.user.login + "') or (`name` LIKE  '%" + req.body.search + "%' and `login` NOT LIKE '" + req.user.login + "')"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -86,11 +87,14 @@ exports.getTransaction = (req, res) => {
                 response.status(400, error, res)
         } else {
                 response.status(200, rows[0], res)
+                console.log(rows[0])
         }})
 }
 
+
+
 exports.getAllTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -100,7 +104,7 @@ exports.getAllTransactions = (req, res) => {
 }
 
 exports.getIncomingTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction WHERE getter_id = '"+ req.user.login + "'"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE getter_id = '"+ req.user.login + "'"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -110,7 +114,7 @@ exports.getIncomingTransactions = (req, res) => {
 }
 
 exports.getOutcomingTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction WHERE sender_id = '"+ req.user.login + "'"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE sender_id = '"+ req.user.login + "'"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -118,11 +122,10 @@ exports.getOutcomingTransactions = (req, res) => {
                 response.status(200, rows, res)
         }})
 }
-
 exports.rating_senders_all = (req, res) => {
-        //1. посчитать количество монет для каждого login
-        //2. вернуть order by количество
-        const sql = "SELECT `sender_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction GROUP BY `sender_id` ORDER BY `total_amount` DESC"
+        
+        //SELECT * FROM user JOIN (SELECT sender_id, date, SUM(amount) as `total_amount` FROM transaction GROUP BY transaction.sender_id) as transaction on user.login = transaction.sender_id ORDER by `total_amount` DESC
+        const sql = "SELECT * FROM user JOIN (SELECT sender_id, date, SUM(amount) as `total_amount` FROM transaction GROUP BY transaction.sender_id) as transaction on user.login = transaction.sender_id ORDER by `total_amount` DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -134,7 +137,7 @@ exports.rating_senders_all = (req, res) => {
 exports.rating_getters_all = (req, res) => {
         //1. посчитать количество монет для каждого login
         //2. вернуть order by количество
-        const sql = "SELECT `getter_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction GROUP BY `getter_id` ORDER BY `total_amount` DESC"
+        const sql = "SELECT * FROM user JOIN (SELECT getter_id, date, SUM(amount) as `total_amount` FROM transaction GROUP BY transaction.getter_id) as transaction on user.login = transaction.getter_id ORDER by `total_amount` DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -146,7 +149,9 @@ exports.rating_getters_all = (req, res) => {
 
 exports.rating_getters_month = (req, res) => {
         const date = new Date()
-        const sql = "SELECT `getter_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY `getter_id` ORDER BY `total_amount` DESC"
+        //
+        //
+        const sql = "SELECT * FROM user JOIN (SELECT getter_id, date, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY transaction.getter_id) as transaction on user.login = transaction.getter_id ORDER by `total_amount` DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -157,7 +162,7 @@ exports.rating_getters_month = (req, res) => {
 
 exports.rating_senders_month = (req, res) => {
         const date = new Date()
-        const sql = "SELECT `sender_id`, `date`,`id`, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY `sender_id` ORDER BY `total_amount` DESC"
+        const sql = "SELECT * FROM user JOIN (SELECT sender_id, date, SUM(amount) as `total_amount` FROM transaction WHERE `date` LIKE '" + date.getFullYear() + "-" + (date.getMonth() + 1)  + "%' GROUP BY transaction.sender_id) as transaction on user.login = transaction.sender_id ORDER by `total_amount` DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)

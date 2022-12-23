@@ -44,7 +44,7 @@ exports.login = (req, res) => {
       if(error) {
           response.status(400, error, res)
       } else if(rows.length <= 0) {
-          response.status(401, {message: `Пользователь с login - ${req.body.login} не найден. Пройдите регистрацию.`}, res)
+        response.status(401, {message: `Пользователь с login - ${req.body.login} не найден. Пройдите регистрацию.`}, res)
       } else {
           const row = JSON.parse(JSON.stringify(rows))
           row.map( rw => {
