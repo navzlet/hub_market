@@ -25,7 +25,6 @@ exports.getSharedBalance = (req, res) => {
         if(error) {
         response.status(400, error, res)
 } else {
-        console.log(sql)
         response.status(200, rows[0], res)
 }})     
 }
@@ -87,14 +86,13 @@ exports.getTransaction = (req, res) => {
                 response.status(400, error, res)
         } else {
                 response.status(200, rows[0], res)
-                console.log(rows[0])
         }})
 }
 
 
 
 exports.getAllTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login ORDER BY id DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -104,7 +102,7 @@ exports.getAllTransactions = (req, res) => {
 }
 
 exports.getIncomingTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE getter_id = '"+ req.user.login + "'"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE getter_id = '"+ req.user.login + "' ORDER BY id DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -114,7 +112,7 @@ exports.getIncomingTransactions = (req, res) => {
 }
 
 exports.getOutcomingTransactions = (req, res) => {
-        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE sender_id = '"+ req.user.login + "'"
+        const sql = "SELECT * FROM transaction JOIN (SELECT name as sender_name, login from user) as user_s on transaction.sender_id = user_s.login JOIN (SELECT name as getter_name, login from user) as user_g on transaction.getter_id = user_g.login WHERE sender_id = '"+ req.user.login + "' ORDER BY id DESC"
         db.query(sql, (error, rows, fields) => {
                 if(error) {
                 response.status(400, error, res)
@@ -167,7 +165,6 @@ exports.rating_senders_month = (req, res) => {
                 if(error) {
                 response.status(400, error, res)
         } else {
-                console.log(sql)
                 response.status(200, rows, res)
         }})
 }
