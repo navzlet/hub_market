@@ -1,6 +1,5 @@
 'use strict'
 
-
 exports.status = (status, values, res) => {
     const data = {
         "satus": status,
@@ -8,5 +7,5 @@ exports.status = (status, values, res) => {
     }
     res.status(data.satus)
     res.json(data)
-    res.end()
+    res.end()  
 }

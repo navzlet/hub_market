@@ -13,9 +13,9 @@ app.use(require('cors')())
 app.use(passport.initialize())
 require('./middleware/passport')(passport)
 
-setInterval(()=>{
-    db.query('UPDATE month_wallet SET balance = 30')
-}, 15000)
+// setInterval(()=>{
+//     db.query('UPDATE month_wallet SET balance = 30')
+// }, 15000)
 
 const routes = require('./settings/routes')
 routes(app)
